@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Task = require('./../models/task');
 
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGODB_URI, {
     //correctly apply the url
     useNewUrlParser: true,
     //make sure that indexes are created when mongoose works with mongodb, allow access to data fast
