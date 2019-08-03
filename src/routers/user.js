@@ -21,12 +21,9 @@ const upload = multer({
     }
 });
 
-
-
 router.get('/users/me',auth, async (req,res) => {
     res.send(req.user)
 });
-
 
 router.post('/users',async (req, res) => {
 
@@ -35,13 +32,11 @@ router.post('/users',async (req, res) => {
     try{
         const token = await user.generateAuthToken();
         await user.save();
-        console.log('here');
         sendWellcomeEmail(user.email, user.name);
-        console.log(user.email);
         res.status(201).send( {user,token} );
     }
     catch (e) {
-        res.status(400).send(e)
+        res.status(500).send(e)
     }
 });
 
@@ -49,7 +44,7 @@ router.get('/users/login', async (req,res) => {
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.send({user ,token});
+        res.status(200).send({user ,token});
     }catch(e){
         console.log('error');
         res.status(400).send(e.message)
@@ -68,6 +63,7 @@ router.post('/users/logout', auth, async (req,res) => {
         res.status(501).send('Logged out')
     }
 });
+
 router.post('/users/logoutAll', auth, async (req,res) => {
     try {
         req.user.tokens = [];
@@ -78,9 +74,7 @@ router.post('/users/logoutAll', auth, async (req,res) => {
     }
 });
 
-
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-
 
     const buffer = await sharp(req.file.buffer).resize({width:250, height:250}).png().toBuffer();
     req.user.avatar = buffer;
@@ -126,11 +120,16 @@ router.patch('/users/me', auth, async (req, res) => {
         //runValidator - check if its valid
         const user = await req.user;
 
-        updates.forEach((update) => user[update] = req.body[update]);
-        await user.save();
-        //const user = await User.findByIdAndUpdate(id, req.body,{ new : true ,runValidators: true} );
-        //console.log(user);
-        res.status(201).send(user)
+        if(isValidOperation){
+            updates.forEach((update) => user[update] = req.body[update]);
+            await user.save();
+            //const user = await User.findByIdAndUpdate(id, req.body,{ new : true ,runValidators: true} );
+            //console.log(user);
+            res.status(201).send(user)
+        }
+        else{
+            res.status(400).send({error:'unvalid field'})
+        }
     }catch(e){
         res.status(500).send(e)
     }
@@ -144,10 +143,8 @@ router.delete('/users/me', auth, async (req, res) => {
         res.status(201).send(req.user);
     }
     catch(e){
-        res.status(400).send(e)
+        res.status(500).send(e)
     }
 });
-
-
 
 module.exports = router;

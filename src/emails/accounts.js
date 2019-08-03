@@ -7,8 +7,8 @@ const sendWellcomeEmail = (email, name) => {
       to: email,
       from: 'tduany@gmail.com',
       subject: 'Wellcome Email',
-      text: `Wellcome to the app ${name}! Let me know how you get along with the app!`,
-      html: `<h1>Bla Bla </hi>`
+      text: `Wellcome ${name}! Let me know how you get along with the app!`,
+      html: `<h1>Welcom to your new AppManager service!</hi>`
   })
 };
 
