@@ -1,4 +1,4 @@
-## Document
+## Docs
 **POST Options**
  - Create User ( Log in automatically afterward) :
       ```javascript 
