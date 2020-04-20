@@ -119,7 +119,7 @@
     var request = require("request");
 
     var options = { method: 'GET',
-      url: 'http://{{url}}/users/me',
+      url: 'http://task-manager-duani.herokuapp.com/users/me',
       headers: 
        {'cache-control': 'no-cache',
          'Content-Type': 'application/json' } };
